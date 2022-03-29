@@ -6,8 +6,9 @@ import {
   useConnectedWallet
 } from "@gokiprotocol/walletkit";
 
-import { Button, Col, Row } from "antd";
+import { Button, Col, Row, Space } from "antd";
 import WalletInfo from "components/walletInfo";
+import Transfer from "components/transfer";
 
 import { AppDispatch } from "store";
 import { setWalletInfo, WalletState } from "store/wallet.reducer";
@@ -41,21 +42,33 @@ function App() {
 
   return (
     <Row justify="center" gutter={[24, 24]}>
-      <Col span={12} style={{ paddingTop: "50px" }}>
-        <WalletInfo />
-      </Col>
-      {/* Button connect wallet */}
-      <Col span={24} style={{ textAlign: "center" }}>
-        {wallet ? (
-          <Button type="primary" onClick={disconnect}>
-            Disconnect
-          </Button>
-        ) : (
-          // Call connectWallet function when click Button
-          <Button type="primary" onClick={connect}>
-            Connect Wallet
-          </Button>
-        )}
+      <Col span={12}>
+        <Row gutter={[24, 24]}>
+          <Col span={24} style={{ paddingTop: "50px" }}>
+            <WalletInfo />
+          </Col>
+          {/* Button connect wallet */}
+          <Col span={24} style={{ textAlign: "center" }}>
+            {wallet ? (
+              <Space>
+                <Button type="primary" onClick={disconnect}>
+                  Disconnect
+                </Button>
+                <Button type="primary" onClick={fetchBalance}>
+                  Update Wallet
+                </Button>
+              </Space>
+            ) : (
+              // Call connectWallet function when click Button
+              <Button type="primary" onClick={connect}>
+                Connect Wallet
+              </Button>
+            )}
+          </Col>
+          <Col span={24}>
+            <Transfer />
+          </Col>
+        </Row>
       </Col>
     </Row>
   );
