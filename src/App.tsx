@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   useWalletKit,
   useSolana,
@@ -8,23 +9,30 @@ import {
 import { Button, Col, Row } from "antd";
 import WalletInfo from "components/walletInfo";
 
+import { AppDispatch } from "store";
+import { setWalletInfo, WalletState } from "store/wallet.reducer";
+
 import "./App.css";
 
 function App() {
-  // State: balance (type = number, default value = 0)
-  const [balance, setBalance] = useState<number>(0);
   // Goki hooks
   const wallet = useConnectedWallet();
   const { connect } = useWalletKit();
   const { disconnect, providerMut } = useSolana();
+  const dispatch = useDispatch<AppDispatch>();
 
   const fetchBalance = useCallback(async () => {
     // TODO: fetch balance
+    let walletInfo: WalletState = {
+      walletAddress: wallet?.publicKey.toBase58() || "",
+      balance: 0
+    };
     if (wallet && providerMut) {
-      let balance = await providerMut.connection.getBalance(wallet.publicKey);
-      return setBalance(balance);
+      walletInfo.balance = await providerMut.connection.getBalance(
+        wallet.publicKey
+      );
     }
-    setBalance(0);
+    dispatch(setWalletInfo(walletInfo));
   }, [providerMut, wallet]);
 
   useEffect(() => {
@@ -34,10 +42,7 @@ function App() {
   return (
     <Row justify="center" gutter={[24, 24]}>
       <Col span={12} style={{ paddingTop: "50px" }}>
-        <WalletInfo
-          address={wallet?.publicKey.toBase58() || ""}
-          balance={balance}
-        />
+        <WalletInfo />
       </Col>
       {/* Button connect wallet */}
       <Col span={24} style={{ textAlign: "center" }}>
