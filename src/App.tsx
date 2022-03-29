@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { useWalletKit, useSolana, useConnectedWallet } from "@gokiprotocol/walletkit";
+import {
+  useWalletKit,
+  useSolana,
+  useConnectedWallet
+} from "@gokiprotocol/walletkit";
 
 import { Button, Col, Row } from "antd";
 import WalletInfo from "components/walletInfo";
@@ -28,9 +32,12 @@ function App() {
   }, [fetchBalance]);
 
   return (
-    <Row justify="center">
-      <Col>
-        <WalletInfo address={wallet?.publicKey.toBase58() || ""} balance={balance} />
+    <Row justify="center" gutter={[24, 24]}>
+      <Col span={12} style={{ paddingTop: "50px" }}>
+        <WalletInfo
+          address={wallet?.publicKey.toBase58() || ""}
+          balance={balance}
+        />
       </Col>
       {/* Button connect wallet */}
       <Col span={24} style={{ textAlign: "center" }}>
